@@ -1,0 +1,33 @@
+C:\Users\CEDP\AppData\Roaming\Python\Python311\site-packages\anndata\_core\anndata.py:1820: UserWarning: Variable names are not unique. To make them unique, call `.var_names_make_unique`.
+  utils.warn_names_duplicates("var")
+C:\Users\CEDP\AppData\Roaming\Python\Python311\site-packages\anndata\_core\anndata.py:1820: UserWarning: Variable names are not unique. To make them unique, call `.var_names_make_unique`.
+  utils.warn_names_duplicates("var")
+========================================
+
+Data converted in matrix representation
+
+
+GPU not available
+  0%|          | 0/13 [00:00<?, ?it/s]************************************************
+Model description:
+sample: hbc_b1s1
+seed: 4
+lr: 0.1
+alpha: 0.2
+  8%|7         | 1/13 [00:49<09:59, 49.95s/it]last layer size: 4
+Loaded...
+************************************************
+Model description:
+sample: hbc_b1s1
+seed: 4
+lr: 0.1
+alpha: 0.25
+ 15%|#5        | 2/13 [01:43<09:35, 52.28s/it]last layer size: 4
+Loaded...
+************************************************
+Model description:
+sample: hbc_b1s1
+seed: 4
+lr: 0.1
+alpha: 0.3
+^C
