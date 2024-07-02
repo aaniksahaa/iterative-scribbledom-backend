@@ -8,23 +8,32 @@ Data converted in matrix representation
 
 
 GPU not available
-  0%|          | 0/13 [00:00<?, ?it/s]************************************************
+  0%|          | 0/13 [00:00<?, ?it/s]
+
+************************************************
+
 Model description:
 sample: hbc_b1s1
 seed: 4
 lr: 0.1
 alpha: 0.2
-  8%|7         | 1/13 [00:49<09:59, 49.95s/it]last layer size: 4
+last layer size: 4
 Loaded...
+  8%|7         | 1/13 [00:51<10:23, 51.94s/it]
+
 ************************************************
+
 Model description:
 sample: hbc_b1s1
 seed: 4
 lr: 0.1
 alpha: 0.25
- 15%|#5        | 2/13 [01:43<09:35, 52.28s/it]last layer size: 4
+last layer size: 4
 Loaded...
+ 15%|#5        | 2/13 [01:42<09:22, 51.13s/it]
+
 ************************************************
+
 Model description:
 sample: hbc_b1s1
 seed: 4

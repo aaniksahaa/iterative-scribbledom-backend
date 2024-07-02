@@ -26,22 +26,10 @@ def handle_disconnect():
 
 @socketio.on('run_iteration')
 def handle_run_iteration(data):
-    iter_no = data['iter_no']
-    print(f'Client requested to run iteration {iter_no}')
-    # Assume client.py writes updates to updates.log
-
-    batch_file = 'run_hbc_b1s1.bat'
-    curr_iteration = f'{iter_no}'
-    n_max_scribble_file = '10'
-
-    command = [batch_file, curr_iteration, n_max_scribble_file]
-
-    process = subprocess.Popen([batch_file, curr_iteration, n_max_scribble_file])
-
-    process.wait()
-
-    socketio.emit('success')
-
+    for i in range(1000):
+        with open('updates.log', 'a') as file:
+            file.write(f'\n\n{i}\n\n')
+        time.sleep(8)
 
 def check_updates():
     interval = 5

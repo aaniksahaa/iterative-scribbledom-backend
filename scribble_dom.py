@@ -96,7 +96,7 @@ for model in tqdm(models):
     sample = model['sample']
     alpha = model['alpha']
 
-    print("************************************************")
+    print("\n\n************************************************\n")
     print('Model description:')
     print(f'sample: {sample}')
     print(f'seed: {seed}')
