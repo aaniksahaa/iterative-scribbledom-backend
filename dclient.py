@@ -33,7 +33,7 @@ def send_set_data():
     data = {
         "space_ranger_output_directory": "raw_gene_x",
         "dataset": "cancers",
-        "samples": ["hbc_b1s1"]
+        "sample": "hbc_b1s1-dummy"
     }
     print(f"Sending set_data request with data: {data}")
     sio.emit('set_data', data)

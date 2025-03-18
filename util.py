@@ -53,6 +53,10 @@ def write_json(dir, filename, j):
     with open(filepath,'w') as f:
         f.write(json.dumps(j,indent=4))
 
+
+def create_folder_if_not_exists(path):
+    os.makedirs(path, exist_ok=True)
+
 def file_exists(directory, filename):
     """Check if a file exists in the given directory."""
     file_path = os.path.join(directory, filename)

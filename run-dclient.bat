@@ -1,0 +1,2 @@
+python dclient.py 
+pause 

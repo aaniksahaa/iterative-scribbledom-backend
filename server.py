@@ -62,7 +62,7 @@ def validate_preprocessed_data(dataset, sample_name):
     # Define the required subdirectories for each sample
     expected_subdirs = [
         'Coordinates',
-        'manual_scribble',
+        # 'manual_scribble',
         'Principal_Components/CSV',
         'reading_h5',
         'reading_h5/spatial'
@@ -158,8 +158,8 @@ def handle_set_data(data):
         # Extract the required parameters
         space_ranger_output_directory = data['space_ranger_output_directory']
         dataset = data['dataset']
-        samples = data['samples']
-        sample_name = samples[0]  # Taking the first sample name as per requirement
+        sample_name = data['sample']
+        samples = [sample_name]
 
         # Create the JSON configuration
         config = {
@@ -208,6 +208,8 @@ def handle_set_data(data):
         if ok:
             # Validate the preprocessed data folder structure
             if validate_preprocessed_data(dataset, sample_name):
+                create_folder_if_not_exists(os.path.join('final_outputs', dataset, sample_name))
+                create_folder_if_not_exists(os.path.join('preprocessed_data', dataset, sample_name, 'manual_scribble'))
                 print('\nRscript executed successfully and preprocessed data validated\n')
                 socketio.emit('data_set_success', {'message': 'Data set and processed successfully'})
             else:
