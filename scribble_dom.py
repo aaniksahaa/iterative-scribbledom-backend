@@ -28,6 +28,13 @@ import json
 
 import argparse
 
+
+# exit()
+###################
+from util import * 
+###################
+
+
 parser = argparse.ArgumentParser(description='ScribbleSeg expert annotation pipeline')
 parser.add_argument('--params', help="The input parameters json file path", required=True)
 parser.add_argument('--curr_iteration', help="Current Iteration of scribble", required=True)
@@ -67,9 +74,9 @@ final_output_folder = params['final_output_folder']
 use_cuda = torch.cuda.is_available()
 
 if use_cuda:
-    print("GPU available")
+    display("GPU available")
 else:
-    print("GPU not available")
+    display("GPU not available")
 
 
 
@@ -90,18 +97,26 @@ for sample in samples:
                 )
 
 # %%
+complete_runs = 0
 for model in tqdm(models):
+    ############################################
+    if check_flag(ABORT):
+        print('\n\n\nEXITING DUE TO ABORT!!!\n\n\n')
+        # update_flag(SERVER_LOCKED,False)
+        exit()
+    ############################################
+
     seed = model['seed']
     lr = model['lr']
     sample = model['sample']
     alpha = model['alpha']
 
-    print("\n\n************************************************\n")
-    print('Model description:')
-    print(f'sample: {sample}')
-    print(f'seed: {seed}')
-    print(f'lr: {lr}')
-    print(f'alpha: {alpha}')
+    display("\n\n************************************************\n")
+    display('Model description:')
+    display(f'sample: {sample}')
+    display(f'seed: {seed}')
+    display(f'lr: {lr}')
+    display(f'alpha: {alpha}')
 
     sys.stdout.flush()
 
@@ -167,7 +182,7 @@ for model in tqdm(models):
 
             r = last_layer_channel_count
 
-            print('last layer size:', r)
+            display('last layer size:', r)
             if nConv>=1:
                 self.conv3 = nn.Conv2d(128, r, kernel_size=1, stride=1, padding=0 )
             else:
@@ -233,7 +248,7 @@ for model in tqdm(models):
         background_val = 255
         mask = relabel_mask(mask.copy(), background_val)
         if len(mask[mask != background_val]) == 0:
-            print('Expecting some scribbles, but no scribbles are found!')
+            display('Expecting some scribbles, but no scribbles are found!')
             last_layer_channel_count = 100 + added_layers
             nChannel = last_layer_channel_count
         else:
@@ -250,7 +265,7 @@ for model in tqdm(models):
 
             # for i in range(1, len(mask_inds)):
             #     if mask_inds[i] - mask_inds[i-1] != 1:
-            #         print("Problem in scribble labels. Not increasing by 1.")
+            #         display("Problem in scribble labels. Not increasing by 1.")
 
             # # Take the non-scribbled foreground into similarity component
             mask_foreground[scr_idx] = background_val
@@ -282,7 +297,7 @@ for model in tqdm(models):
 
     final_output_model = f"{final_output_folder}/{dataset}/{sample}/{scheme}/final_model.pt"
     if os.path.exists(final_output_model):
-        print("Loaded...")
+        display("Loaded...")
         model.load_state_dict(torch.load(final_output_model))
     if use_cuda:
         model.cuda()
@@ -335,8 +350,12 @@ for model in tqdm(models):
     im_cluster_num = im_target.reshape(im.shape[0], im.shape[1])
 
     labels = im_cluster_num[pixel_rows_cols[:, 0], pixel_rows_cols[:, 1]]
+    ##############################
+    # making 1-indexed
+    # labels = [x+1 for x in labels]
+    ##############################
     df_labels = pd.DataFrame({'label': labels}, index=pixel_barcode[pixel_barcode != ''])
-    # print("current iteration: ", curr_iteration)
+    # display("current iteration: ", curr_iteration)
     df_labels.to_csv(f'{leaf_output_folder_path}/final_barcode_labels.csv')
 
     df_meta = pd.DataFrame(
@@ -353,3 +372,8 @@ for model in tqdm(models):
     df_meta.to_csv(f'{leaf_output_folder_path}/meta_data.csv')
 
     sys.stdout.flush()
+
+    complete_runs += 1
+    pct = round((complete_runs/len(models))*100,2)
+    display(f'\nModel Run Progress: {pct} %')
+    display(f'{complete_runs} of {len(models)} models ran successfully\n')

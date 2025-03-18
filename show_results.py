@@ -5,6 +5,18 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
+###################
+from util import * 
+###################
+
+############################################
+if check_flag(ABORT):
+    print('\n\n\nEXITING DUE TO ABORT!!!\n\n\n')
+    update_flag(SERVER_LOCKED,False)
+    exit()
+############################################
+
+
 parser = argparse.ArgumentParser(description='Likelikehood estimation of models')
 parser.add_argument('--params', help="The input of model_outs and preprocessed_data and location of output", required=True)
 args = parser.parse_args()
@@ -28,7 +40,7 @@ for sample in samples:
     final_output_ari = f"{final_output_folder}/{dataset}/{sample}/{scheme}/ari.csv"
 
     if not os.path.isfile(final_output_file):
-        print("Final output doesn't exist. Run the model to get final output!!!")
+        display("Final output doesn't exist. Run the model to get final output!!!")
         exit()
 
     df_final = pd.read_csv(final_output_file,index_col=0)
@@ -50,7 +62,7 @@ for sample in samples:
     plt.savefig(final_output_img,dpi=1200,bbox_inches='tight',pad_inches=0)
 
     if not os.path.isfile(manual_annotation_file):
-        print("Manual annnotaion doesn't exist, can't calculate ari.!!!!")
+        display("Manual annnotaion doesn't exist, can't calculate ari.!!!!")
         exit()
 
     df_man = pd.read_csv(manual_annotation_file,index_col=0)
@@ -68,7 +80,7 @@ for sample in samples:
         df_manual_partial = pd.read_csv(f"{preprocessed_dataset_folder}/{dataset}/{sample}/manual_annotations_wo_unannotated_reg.csv", index_col=0)
         ari = calc_ari(df_manual_partial, df_final.loc[df_manual_partial.index])
 
-    print(f"Ari for dataset:{dataset} sample:{sample} scheme:{scheme} is: ",ari)
+    display(f"Ari for dataset:{dataset} sample:{sample} scheme:{scheme} is: ",ari)
     pd.DataFrame([{"ARI":ari}]).to_csv(final_output_ari)
 
     

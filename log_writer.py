@@ -5,6 +5,16 @@ def write_to_log(entry):
         log_file.write(entry + '\n')
 
 if __name__ == "__main__":
+    ############################################
+
+    # THIS CODE IS ADDED FOR DESKTOP APP SERVER
+
+    from util import *
+    if check_flag(ABORT) or check_flag(SERVER_LOCKED):
+        exit()
+
+    ############################################
+
     if len(sys.argv) != 2:
         print("Usage: python log_writer.py \"Your log entry\"")
         sys.exit(1)

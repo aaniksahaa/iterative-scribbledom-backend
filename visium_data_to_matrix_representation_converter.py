@@ -12,6 +12,18 @@ import json
 import argparse
 from code_utils.scribble_generation.autoscribble_generator import make_backbone
 
+###################
+from util import * 
+###################
+
+############################################
+if check_flag(ABORT):
+    print('\n\n\nEXITING DUE TO ABORT!!!\n\n\n')
+    # update_flag(SERVER_LOCKED,False)
+    exit()
+############################################
+
+
 parser = argparse.ArgumentParser(description='ScribbleSeg Preprocessor')
 parser.add_argument('--params', help="The input parameters json file path", required=True)
 parser.add_argument('--curr_iteration', help="Current Iteration of scribble", required=True)
@@ -43,7 +55,7 @@ for sample in samples:
     if technology == 'visium':
         adata = scanpy.read_visium(path=h5_path,count_file=h5_file)
     else:
-        print("Only visium data works in this pipeline")
+        display("Only visium data works in this pipeline")
         exit()
     adata.var_names_make_unique()
     
@@ -110,7 +122,7 @@ for sample in samples:
                     parity = (i + j) % 2
                     started = True
                 if grid[i, j] != -1 and parity != (i + j) % 2:
-                    print("Invalid grid structure!")
+                    display("Invalid grid structure!")
                     return -1
         return parity
 

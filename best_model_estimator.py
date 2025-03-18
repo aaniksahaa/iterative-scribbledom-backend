@@ -12,6 +12,18 @@ import os
 import json
 import argparse
 
+###################
+from util import * 
+###################
+
+############################################
+if check_flag(ABORT):
+    print('\n\n\nEXITING DUE TO ABORT!!!\n\n\n')
+    # update_flag(SERVER_LOCKED,False)
+    exit()
+############################################
+
+
 parser = argparse.ArgumentParser(description='Likelikehood estimation of models')
 parser.add_argument('--params', help="The input of model_outs and preprocessed_data and location of output", required=True)
 args = parser.parse_args()

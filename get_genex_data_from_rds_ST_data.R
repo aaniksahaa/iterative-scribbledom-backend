@@ -3,7 +3,7 @@ source("code_utils/read_data/installation.R")
 
 install_libraries()
 
-library(SingleCellExperiment)
+# library(SingleCellExperiment)
 library(rhdf5)
 library(tidyverse)
 library(Matrix)
