@@ -194,7 +194,8 @@ def handle_set_data(data):
         print(f'\nConfiguration file saved at: {config_file_path}\n')
 
         # Run the bash command
-        bash_command = f"sudo Rscript get_genex_data_from_10x_h5.R {config_file_path}"
+        # bash_command = f"sudo Rscript get_genex_data_from_10x_h5.R {config_file_path}"
+        bash_command = f"Rscript get_genex_data_from_10x_h5.R {config_file_path}"
         print(f'\nRunning command: {bash_command}\n')
 
         process = subprocess.Popen(bash_command, shell=True)

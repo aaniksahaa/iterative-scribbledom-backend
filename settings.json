@@ -1,1 +1,4 @@
-{"default_branch": "main"}
+{"default_branch": "main",
+"editor.scrollBeyondLastLine": false,
+"editor.smoothScrolling": false
+}
