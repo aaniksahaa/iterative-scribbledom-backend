@@ -3,4 +3,5 @@ final_outputs
 model_outputs
 matrix_representation_of_st_data
 raw_gene_x
+saved_images
 *.cloupe
