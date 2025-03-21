@@ -193,16 +193,16 @@ def handle_set_data(data):
             json.dump(config, f, indent=4)
         print(f'\nConfiguration file saved at: {config_file_path}\n')
 
-        # # Run the bash command
-        # bash_command = f"sudo Rscript get_genex_data_from_10x_h5.R {config_file_path}"
-        # print(f'\nRunning command: {bash_command}\n')
+        # Run the bash command
+        bash_command = f"sudo Rscript get_genex_data_from_10x_h5.R {config_file_path}"
+        print(f'\nRunning command: {bash_command}\n')
 
-        # process = subprocess.Popen(bash_command, shell=True)
-        # process.wait()
+        process = subprocess.Popen(bash_command, shell=True)
+        process.wait()
 
-        # ok = (process.returncode == 0)
+        ok = (process.returncode == 0)
 
-        ok = True
+        # ok = True
 
         # Check if the command executed successfully
         if ok:

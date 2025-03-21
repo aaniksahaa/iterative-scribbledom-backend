@@ -1,6 +1,7 @@
-# ScribbleDom
+# IterativeScribbleDom
 A method to find spatial domain from Spatial Transcriptomics data using scribble annotated histology image, or using 
 output of other possibly non-spatial spatial domain detection method (e.g. mclust).
+This is the backend side of the app that accompanies the flutter frontend desktop application.
 
 # Prerequisites
 Recommended Python version: 3.10.6</br>
@@ -19,9 +20,15 @@ First set and activate your environment by using the following command:
 ```
 conda env create -f environment.yml
 conda activate scribble_dom
+pip install flask flask-socketio
 ```
 
-# Run experiments with availabe data.
+# Run python backend for the Application
+```
+./run_server.sh
+```
+
+# Run experiments with available data.
 To run human breast cancer data :
 ```
 chmod +x run_bcdc_ffpe.sh
