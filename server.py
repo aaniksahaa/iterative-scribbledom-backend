@@ -17,6 +17,8 @@ check_started = False
 processed_bytes = 0
 lock_time = 60
 
+CONFIG_FILE_PATH = None
+
 def write_abort():
     clear_log()
     lock_time
@@ -120,17 +122,26 @@ def handle_run_iteration(data):
     position_path = data['position_path']
 
     print(f'Client requested to run iteration {iter_no}')
-    batch_file = 'run_hbc_b1s1.bat'
 
-    if('human_dlpfc' in position_path.lower()):
-        batch_file = 'run_human_dlpfc.bat'
+    if not CONFIG_FILE_PATH:
+        socketio.emit('error', {'message': 'Config file not found. Please select the path from the settings again.'})
+        return 
+
+
+    # batch_script = 'run_hbc_b1s1.bat'
+    # if('human_dlpfc' in position_path.lower()):
+    #     batch_script = 'run_human_dlpfc.bat'
+
+    batch_script = "./run_model.sh"
     
-    print(f'\n\nRUNNING {batch_file}\n\n')
+    print(f'\n\nRUNNING {batch_script}\n\n')
 
     curr_iteration = f'{iter_no}'
     n_max_scribble_file = '10'
 
-    command = [batch_file, curr_iteration, n_max_scribble_file]
+    command = [batch_script, CONFIG_FILE_PATH, curr_iteration, n_max_scribble_file]
+
+    print(command)
 
     process = subprocess.Popen(command)
     process.wait()
@@ -161,6 +172,8 @@ def handle_set_data(data):
         sample_name = data['sample']
         samples = [sample_name]
 
+        schema = "expert"
+
         # Create the JSON configuration
         config = {
             "preprocessed_data_folder": "preprocessed_data",
@@ -171,13 +184,13 @@ def handle_set_data(data):
             "dataset": dataset,
             "samples": samples,
             "technology": "visium",
-            "n_pcs": 15,
-            "n_cluster_for_auto_scribble": 2,
-            "schema": "mclust",
+            "n_pcs": 30,
+            "n_cluster_for_auto_scribble": 4,
+            "schema": schema,
             "max_iter": 300,
             "nConv": 1,
             "seed_options": [4],
-            "alpha_options": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95],
+            "alpha_options": [0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8],
             "beta_options": [0.25, 0.3, 0.35, 0.4],
             "lr_options": [0.1]
         }
@@ -186,16 +199,32 @@ def handle_set_data(data):
         # config_dir = os.path.join('IterativeScribbleDom', 'configs', sample_name)
         config_dir = os.path.join('configs', sample_name)
         os.makedirs(config_dir, exist_ok=True)  # Create the directory if it doesn't exist
-        config_file_path = os.path.join(config_dir, f'{sample_name}_config_mclust.json')
+
+        config_file_path = os.path.join(config_dir, f'{sample_name}_config_{schema}.json')
+
+        global CONFIG_FILE_PATH
+        CONFIG_FILE_PATH = str(config_file_path)
+
+        print(CONFIG_FILE_PATH)
 
         # Save the JSON file
         with open(config_file_path, 'w') as f:
             json.dump(config, f, indent=4)
         print(f'\nConfiguration file saved at: {config_file_path}\n')
 
+
+
+        if validate_preprocessed_data(dataset, sample_name):
+            create_folder_if_not_exists(os.path.join('final_outputs', dataset, sample_name))
+            create_folder_if_not_exists(os.path.join('preprocessed_data', dataset, sample_name, 'manual_scribble'))
+            print('\nData is already preprocessed. Not running the Rscript.\n')
+            socketio.emit('data_set_success', {'message': 'Data is already processed. Data set successfully.'})
+            return 
+
+
         # Run the bash command
         # bash_command = f"sudo Rscript get_genex_data_from_10x_h5.R {config_file_path}"
-        bash_command = f"sudo Rscript get_genex_data_from_10x_h5.R {config_file_path}"
+        bash_command = f"Rscript get_genex_data_from_10x_h5.R {config_file_path}"
         print(f'\nRunning command: {bash_command}\n')
 
         process = subprocess.Popen(bash_command, shell=True)
