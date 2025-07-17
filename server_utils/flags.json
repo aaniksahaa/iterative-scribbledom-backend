@@ -1,6 +1,6 @@
 {
-    "abort": false,
-    "process_ended": true,
-    "server_locked": false,
+    "abort": true,
+    "process_ended": false,
+    "server_locked": true,
     "run_id": 1
 }
